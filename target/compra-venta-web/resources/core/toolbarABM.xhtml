@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+
+	<composite:attribute name="managedBean"		
+		required="true" shortDescription="Backing Bean que se utilizará." />
+
+	<composite:attribute name="dialogo" required="false"
+		shortDescription="Nombre del dialogo." />
+
+	<composite:attribute name="fdialogo" required="false"
+		shortDescription="Nombre del form del dialogo." />
+
+	
+	<composite:attribute name="botonAgregar"
+		default="true" required="false" />
+		
+	<composite:attribute name="botonModificar" 
+		default="true" required="false" />
+	<composite:attribute name="botonEliminar" 
+		default="true" required="false" />
+
+</composite:interface>
+
+<composite:implementation>
+
+	<p:commandButton value="Agregar" rendered="#{cc.attrs.botonAgregar}"
+		oncomplete="PF(\'#{cc.attrs.dialogo}\').show()" update="#{cc.attrs.fdialogo}"
+		actionListener="#{cc.attrs.managedBean.onClickAgregar}"/>
+
+	<p:commandButton value="Modificar"
+		rendered="#{cc.attrs.botonModificar}"
+		oncomplete="PF(\'#{cc.attrs.dialogo}\').show()" update="#{cc.attrs.fdialogo}"
+		actionListener="#{cc.attrs.managedBean.onClickModificar}"/>
+
+	<p:commandButton value="Eliminar" rendered="#{cc.attrs.botonEliminar}"
+		oncomplete="PF(\'#{cc.attrs.dialogo}\').show()" update="#{cc.attrs.fdialogo}"
+		actionListener="#{cc.attrs.managedBean.onClickEliminar}"/>	
+
+	<composite:insertChildren />
+
+</composite:implementation>
+
+</html>

@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:core="http://java.sun.com/jsf/composite/core">
+
+
+	<core:dialogoABM id="dialogoCmp" nombre="dialogo" ftoolbar=":ftoolbar"
+		grilla=":listaProductos" managedBean="#{productoMB}">
+
+		<h:panelGrid columns="2">
+
+			<p:outputLabel for="codigo" value="Cód. Producto: "/>
+			<p:inputText id="codigo" value="#{productoMB.entidad.codigo}"/>
+
+			<p:outputLabel for="nombre" value="Nombre: " />
+			<p:inputText maxlength="50"								
+				autoResize="false" id="nombre"
+				value="#{productoMB.entidad.nombre}" required="true" />
+			
+			<p:outputLabel for="existencia" value="Existencia: " />
+			<p:inputNumber							
+				autoResize="false" id="existencia"
+				value="#{productoMB.entidad.existencia}" required="true" />
+			
+			<p:outputLabel for="precio" value="Precio: " />
+			<p:inputNumber							
+				autoResize="false" id="precio"
+				value="#{productoMB.entidad.precio}" required="true" />
+
+		</h:panelGrid>
+
+
+	</core:dialogoABM>
+
+
+
+</ui:composition>

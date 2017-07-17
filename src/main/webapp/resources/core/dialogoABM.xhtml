@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+
+	<composite:attribute name="nombre" />
+
+	<composite:attribute name="ftoolbar" required="false"
+		shortDescription="Id del toolbar a referenciar" />
+
+	<composite:attribute name="grilla" required="false"
+		shortDescription="Id de la grilla a referenciar" />
+
+	<composite:attribute name="managedBean"		
+		required="true" shortDescription="Backing Bean que se utilizará." />
+
+</composite:interface>
+
+<composite:implementation>
+
+	<h:form id="#{cc.attrs.nombre}">
+		<p:dialog modal="true" header="#{cc.attrs.managedBean.stringEstado()}"
+			widgetVar="#{cc.attrs.nombre}" closable="false" resizable="false">
+
+			<br />
+			<p:panel rendered="#{cc.attrs.managedBean.eliminar}">
+
+				<h:outputText value="#{cc.attrs.managedBean.mensajeEliminar}" />
+
+			</p:panel>
+
+			<p:panel rendered="#{!cc.attrs.managedBean.eliminar}">
+
+				<composite:insertChildren />
+
+			</p:panel>
+			<br />
+			<h:panelGrid columns="3" style="margin : auto">
+				<p:commandButton 
+					value="Confirmar" update=":growl, #{cc.attrs.ftoolbar}"
+					actionListener="#{cc.attrs.managedBean.procesar}"
+					oncomplete="if(!args.validationFailed) #{cc.attrs.nombre}.hide(), #{cc.attrs.grilla}.clearFilters()" />
+
+				<p:commandButton 
+					value="Cancelar" update="#{cc.attrs.ftoolbar}"
+					actionListener="#{cc.attrs.managedBean.onClickCancelar}"
+					oncomplete="PF(\'#{cc.attrs.nombre}\').hide(), #{cc.attrs.grilla}.clearFilters()"
+					process="@this">
+					<p:resetInput target="#{cc.attrs.nombre}" />
+				</p:commandButton>				
+
+			</h:panelGrid>
+
+
+		</p:dialog>
+
+	</h:form>
+
+
+</composite:implementation>
+
+
+
+</html>

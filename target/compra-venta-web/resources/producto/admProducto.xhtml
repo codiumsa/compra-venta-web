@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:core="http://java.sun.com/jsf/composite/core">
+<ui:composition template="../layout.xhtml"
+	>
+
+	<ui:define name="titulo">Productos</ui:define>
+
+	<ui:define name="contenido">
+
+
+		<div class="ui-widget ui-widget-header ui-corner-all"
+			style="padding: 6px; margin: 12px 0px 8px 0px">Administración
+			&gt; Productos</div>
+
+		<br />
+		<h:form id="ftoolbar">
+			<core:toolbarABM managedBean="#{productoMB}" dialogo="dialogo"
+				fdialogo=":dialogoCmp:dialogo">
+
+			</core:toolbarABM>
+		</h:form>
+		<br />
+
+		<h:form id="frmGrilla">
+			<core:grillaABM id="grilla" titulo="Productos"
+				managedBean="#{productoMB}" nombre="listaProductos"
+				ftoolbar=":ftoolbar">
+
+				<p:column filterBy="#{entidad.id}" sortBy="#{entidad.id}">
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{entidad.id}" />
+				</p:column>
+
+				<p:column sortBy="#{entidad.codigo}"
+					exportable="false" filterBy="#{entidad.codigo}">
+					<f:facet name="header">Código</f:facet>
+					<h:outputText value="#{entidad.codigo}" />
+				</p:column>
+
+				<p:column filterBy="#{entidad.nombre}" sortBy="#{entidad.nombre}">
+					<f:facet name="header">Nombre</f:facet>
+					<h:outputText value="#{entidad.nombre}" />
+				</p:column>
+
+				<p:column sortBy="#{entidad.existencia}"
+					exportable="false" filterBy="#{entidad.existencia}">
+					<f:facet name="header">Existencia</f:facet>
+					<h:outputText value="#{entidad.existencia}" />
+				</p:column>
+				<p:column sortBy="#{entidad.precio}" exportable="false">
+					<f:facet name="header">Precio</f:facet>
+					<h:outputText value="#{entidad.precio}">						
+					</h:outputText>
+				</p:column>
+
+
+			</core:grillaABM>
+
+		</h:form>
+		<ui:include src="formsProducto.xhtml" />
+	</ui:define>
+
+</ui:composition>
+</html>
