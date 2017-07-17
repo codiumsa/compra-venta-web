@@ -42,12 +42,7 @@
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>jaxrs-api</artifactId>
 			<version>3.0.12.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>py.gov.hacienda</groupId>
-			<artifactId>compraventa</artifactId>
-			<version>0.1.0</version>
-		</dependency>
+		</dependency>				
 		<!-- PrimeFaces -->
 		<dependency>
 			<groupId>org.primefaces</groupId>

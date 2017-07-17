@@ -2,6 +2,7 @@ package py.com.compraventa.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,16 +14,12 @@ import javax.faces.context.FacesContext;
 
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
-
-import compraventa.model.Producto;
+import py.com.compraventa.model.Producto;
 
 @ManagedBean
 @ViewScoped
 public class ProductoMB implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	/*@Inject
-	ProductosService productoService;*/
+	private static final long serialVersionUID = 1L;	
 	
 	private Producto entidad = new Producto();	
 	
@@ -97,12 +94,9 @@ public class ProductoMB implements Serializable{
 	}
 	
 	
-	@PostConstruct
-	@SuppressWarnings("unchecked")
+	@PostConstruct	
 	void postConstruct() {
-		/*listaDataModel = (List<Producto>) productoService.all(null).getEntity();
-		System.out.println("lista model");
-		System.out.println(listaDataModel.size());*/
+		
 	}
 	
 	public Producto getEntidad() {
@@ -114,7 +108,14 @@ public class ProductoMB implements Serializable{
 		this.entidad = entidad;
 	}	
 	
-	private List<Producto> listaDataModel = new ArrayList<Producto>(); 
+	private List<Producto> listaDataModel = new ArrayList<Producto>(
+			Arrays.asList(
+				      new Producto(1L, "BA", "Banana", 35, 1000L),
+				      new Producto(1L, "BA", "Banana", 35, 1000L),
+				      new Producto(1L, "BA", "Banana", 35, 1000L),
+				      new Producto(1L, "BA", "Banana", 35, 1000L),
+				      new Producto(1L, "BA", "Banana", 35, 1000L)
+				   )); 
 
 	public List<Producto> getListaDataModel() {
 		return listaDataModel;
@@ -169,7 +170,6 @@ public class ProductoMB implements Serializable{
 	public void agregar() {		
 		System.out.println("agregar");		
 		//llamar a servicio de backend
-		/*productoService.create(entidad).getEntity();*/
 		addMessageInfo("Creado exitosamente");
 	}
 
@@ -206,11 +206,8 @@ public class ProductoMB implements Serializable{
 				new FacesMessage(severityInfo, "Operación realizada", message));
 	}
 	
-	public void onClickCancelar() {		
-		//entidad = null;
-		if (modoSeleccionFila){
-			modoSeleccionFila = false;
-		}
+	public void onClickCancelar() {				
+		modoSeleccionFila = false;
 	}
 	
 	public void onRowSelect(SelectEvent event) {
