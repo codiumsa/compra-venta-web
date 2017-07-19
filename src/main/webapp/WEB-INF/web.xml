@@ -16,4 +16,8 @@
 		<servlet-name>facesServlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
+	<context-param>
+	   <param-name>metadata.serviceBaseURL</param-name>
+	   <param-value>http://localhost:8087/compraventa/api</param-value>
+	</context-param>
 </web-app>

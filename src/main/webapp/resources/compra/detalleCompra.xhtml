@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="frmGrillaCompraDetalle">
+	<p:dialog modal="true" header="Detalle de la Compra"
+		widgetVar="detalleCompra" closable="false" resizable="false">
+		<p:dataTable id="grillaCompraDetalle" var="entidad"
+			widgetVar="grillaCompraDetalle"
+			emptyMessage="No se encontraron registros."
+			value="#{compraMB.listaDetalle}" filterEvent="enter"
+			rowKey="#{entidad.id}" rows="15" sortMode="multiple">
+			<f:facet name="header">
+				<h:outputText value="Detalle de la Compra" />
+			</f:facet>
+			<p:column filterBy="#{entidad.producto.codigo}"
+				sortBy="#{entidad.producto.codigo}">
+				<f:facet name="header">Código Producto</f:facet>
+				<h:outputText value="#{entidad.producto.codigo}" />
+			</p:column>
+
+			<p:column sortBy="#{entidad.producto.nombre}"
+				filterBy="#{entidad.producto.nombre}">
+				<f:facet name="header">Nombre Producto</f:facet>
+				<h:outputText value="#{entidad.producto.nombre}">
+				</h:outputText>
+			</p:column>
+
+			<p:column filterBy="#{entidad.cantidad}" sortBy="#{entidad.cantidad}">
+				<f:facet name="header">Cantidad Producto</f:facet>
+				<h:outputText value="#{entidad.cantidad}" />
+			</p:column>
+		</p:dataTable>
+	</p:dialog>
+</h:form>
+</html>

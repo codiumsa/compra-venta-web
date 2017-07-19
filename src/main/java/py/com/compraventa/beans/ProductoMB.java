@@ -1,30 +1,68 @@
 package py.com.compraventa.beans;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.sun.jersey.api.client.ClientResponse;
+
 import py.com.compraventa.model.Producto;
 
 @ManagedBean
 @ViewScoped
 public class ProductoMB implements Serializable{
-	private static final long serialVersionUID = 1L;	
+	private static final long serialVersionUID = 1L;
 	
-	private Producto entidad = new Producto();	
+	@ManagedProperty(value = "#{restClient}")
+	RestClientMB restClient;
 	
-	private String mensajeEliminar = "";
+	private Type type;
 	
+	private Producto entidad = new Producto();		
+	
+	private String mensajeEliminar = "Esta seguro que desea eliminar el producto";
+	
+	private Gson gson = new Gson();
+	
+	private List<Producto> listaDataModel = new ArrayList<Producto>();
+	
+	
+	@PostConstruct	
+	void postConstruct() {
+		ClientResponse response = restClient.clientGetResponse("/productos");
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());
+        }
+        // get productos as JSON        
+        String productos = response.getEntity(String.class);        
+		System.out.println(productos);
+		type = new TypeToken<List<Producto>>() {}.getType();
+		listaDataModel = gson.fromJson(productos, type);
+		System.out.println(listaDataModel.size());		 
+	}
+	
+	public RestClientMB getRestClient() {
+		return restClient;
+	}
+
+	public void setRestClient(RestClientMB restClient) {
+		this.restClient = restClient;
+	}
+
 	public String getMensajeEliminar() {
 		return mensajeEliminar;
 	}
@@ -93,12 +131,6 @@ public class ProductoMB implements Serializable{
 
 	}
 	
-	
-	@PostConstruct	
-	void postConstruct() {
-		
-	}
-	
 	public Producto getEntidad() {
 		return entidad;
 	}
@@ -107,15 +139,6 @@ public class ProductoMB implements Serializable{
 	public void setEntidad(Producto entidad) {
 		this.entidad = entidad;
 	}	
-	
-	private List<Producto> listaDataModel = new ArrayList<Producto>(
-			Arrays.asList(
-				      new Producto(1L, "BA", "Banana", 35, 1000L),
-				      new Producto(1L, "BA", "Banana", 35, 1000L),
-				      new Producto(1L, "BA", "Banana", 35, 1000L),
-				      new Producto(1L, "BA", "Banana", 35, 1000L),
-				      new Producto(1L, "BA", "Banana", 35, 1000L)
-				   )); 
 
 	public List<Producto> getListaDataModel() {
 		return listaDataModel;
@@ -170,12 +193,49 @@ public class ProductoMB implements Serializable{
 	public void agregar() {		
 		System.out.println("agregar");		
 		//llamar a servicio de backend
-		addMessageInfo("Creado exitosamente");
+		String jsonProducto = gson.toJson(entidad);
+		ClientResponse response = restClient.clientPostResponse("/productos", jsonProducto);
+        if (response.getStatus() != 200) {
+        	addMessageInfo("Error al agregar Producto");
+            throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());            
+        }
+        // get productos as JSON  
+        String createProducto = response.getEntity(String.class);
+        type = new TypeToken<Producto>() {}.getType();
+		Producto producto = gson.fromJson(createProducto, type);
+		addMessageInfo("Creado exitosamente: ".concat(producto.getNombre()));
+		agregar = false;
 	}
 
 	
 	public void modificar() {
 		System.out.println("modificar");
+		String jsonProducto = gson.toJson(entidad);
+		ClientResponse response = restClient.clientPutResponse("/productos/".concat(entidad.getId().toString()), jsonProducto);
+        if (response.getStatus() != 200) {
+        	addMessageInfo("Error al modificar Producto");
+            throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());            
+        }
+        // get productos as JSON  
+        String modificarProducto = response.getEntity(String.class);
+        type = new TypeToken<Producto>() {}.getType();
+		Producto producto = gson.fromJson(modificarProducto, type);
+		addMessageInfo("Creado exitosamente: ".concat(producto.getNombre()));
+		//se quita fila seleccionada
+		modoSeleccionFila = false;
+		modificar = false;
+	}
+	
+	public void eliminar() {			
+		ClientResponse response = restClient.clientDeleteResponse("/productos/".concat(entidad.getId().toString()), entidad.getId().toString());
+        if (response.getStatus() != 200) {
+        	addMessageInfo("Error al modificar Producto");
+            throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());            
+        }        
+        entidad = null;
+        estado = null;
+		addMessageInfo("Eliminado exitosamente");
+		eliminar = false;
 	}
 
 	
@@ -188,10 +248,7 @@ public class ProductoMB implements Serializable{
 		return "/resources/producto/admProducto?facesRedirect=true";
 	}
 	
-	public void eliminar() {		
-		addMessageInfo("Eliminado exitosamente");
-		eliminar = false;
-	}
+	
 	
 	public void addMessageInfo(String message) {
 		addMessage(FacesMessage.SEVERITY_INFO, message);
@@ -208,6 +265,9 @@ public class ProductoMB implements Serializable{
 	
 	public void onClickCancelar() {				
 		modoSeleccionFila = false;
+		estado = null;		
+		eliminar = false;
+		//actualizar el datatable
 	}
 	
 	public void onRowSelect(SelectEvent event) {

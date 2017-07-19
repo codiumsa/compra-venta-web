@@ -12,9 +12,15 @@
 
 	<composite:attribute name="dialogo" required="false"
 		shortDescription="Nombre del dialogo." />
+	
+	<composite:attribute name="dialogoDetalle" required="false"
+		shortDescription="Nombre del dialogo del detalle." />
 
 	<composite:attribute name="fdialogo" required="false"
 		shortDescription="Nombre del form del dialogo." />
+		
+	<composite:attribute name="fdialogoDetalle" required="false"
+		shortDescription="Nombre del form del dialogo del detalle." />
 
 	
 	<composite:attribute name="botonAgregar"
@@ -24,6 +30,9 @@
 		default="true" required="false" />
 	<composite:attribute name="botonEliminar" 
 		default="true" required="false" />
+		
+	<composite:attribute name="botonVerDetalle" 
+		default="true" required="true" />
 
 </composite:interface>
 
@@ -40,7 +49,11 @@
 
 	<p:commandButton value="Eliminar" rendered="#{cc.attrs.botonEliminar}"
 		oncomplete="PF(\'#{cc.attrs.dialogo}\').show()" update="#{cc.attrs.fdialogo}"
-		actionListener="#{cc.attrs.managedBean.onClickEliminar}"/>	
+		actionListener="#{cc.attrs.managedBean.onClickEliminar}"/>
+		
+	<p:commandButton value="Ver Detalle" rendered="#{cc.attrs.botonVerDetalle}"
+		oncomplete="PF(\'#{cc.attrs.dialogoDetalle}\').show()" update="#{cc.attrs.fdialogoDetalle}"
+		actionListener="#{cc.attrs.managedBean.onClickVerDetalle}"/>	
 
 	<composite:insertChildren />
 

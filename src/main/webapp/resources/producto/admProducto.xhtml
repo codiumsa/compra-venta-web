@@ -3,10 +3,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui" 
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:core="http://java.sun.com/jsf/composite/core">
-<ui:composition template="../layout.xhtml"
-	>
+<ui:composition template="../layout.xhtml">
 
 	<ui:define name="titulo">Productos</ui:define>
 
@@ -20,7 +19,7 @@
 		<br />
 		<h:form id="ftoolbar">
 			<core:toolbarABM managedBean="#{productoMB}" dialogo="dialogo"
-				fdialogo=":dialogoCmp:dialogo">
+				fdialogo=":dialogoCmp:dialogo" botonVerDetalle="false">
 
 			</core:toolbarABM>
 		</h:form>
@@ -37,7 +36,7 @@
 				</p:column>
 
 				<p:column sortBy="#{entidad.codigo}"
-					exportable="false" filterBy="#{entidad.codigo}">
+					filterBy="#{entidad.codigo}">
 					<f:facet name="header">Código</f:facet>
 					<h:outputText value="#{entidad.codigo}" />
 				</p:column>
@@ -47,14 +46,14 @@
 					<h:outputText value="#{entidad.nombre}" />
 				</p:column>
 
-				<p:column sortBy="#{entidad.existencia}"
-					exportable="false" filterBy="#{entidad.existencia}">
+				<p:column sortBy="#{entidad.existencia}" 
+					filterBy="#{entidad.existencia}">
 					<f:facet name="header">Existencia</f:facet>
 					<h:outputText value="#{entidad.existencia}" />
 				</p:column>
-				<p:column sortBy="#{entidad.precio}" exportable="false">
+				<p:column sortBy="#{entidad.precio}" >
 					<f:facet name="header">Precio</f:facet>
-					<h:outputText value="#{entidad.precio}">						
+					<h:outputText value="#{entidad.precio}">
 					</h:outputText>
 				</p:column>
 

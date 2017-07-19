@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:core="http://java.sun.com/jsf/composite/core">
+<ui:composition template="../layout.xhtml">
+	<ui:define name="titulo">Compras</ui:define>
+	<ui:define name="contenido">
+		<div class="ui-widget ui-widget-header ui-corner-all"
+			style="padding: 6px; margin: 12px 0px 8px 0px">Administración
+			&gt; Compras</div>
+		<br />
+		<h:form id="ftoolbarCompra">
+			<core:toolbarABM managedBean="#{compraMB}" botonVerDetalle="true" dialogoDetalle="detalleCompra"
+			fdialogoDetalle=":frmGrillaCompraDetalle">
+
+			</core:toolbarABM>
+		</h:form>
+		<br />
+		<h:form id="frmGrillaCompra">
+
+			<core:grillaABM id="grillaCompra" titulo="Compras"
+				managedBean="#{compraMB}" nombre="listaCompras"
+				ftoolbar=":ftoolbarCompra">
+
+				<p:column filterBy="#{entidad.id}" sortBy="#{entidad.id}">
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{entidad.id}" />
+				</p:column>
+
+				<p:column sortBy="#{entidad.fecha}" filterBy="#{entidad.fecha}">
+					<f:facet name="header">Fecha</f:facet>
+					<h:outputText value="#{entidad.fecha}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column filterBy="#{entidad.total}" sortBy="#{entidad.total}">
+					<f:facet name="header">Total</f:facet>
+					<h:outputText value="#{entidad.total}" />
+				</p:column>
+
+			</core:grillaABM>
+
+		</h:form>		
+		<ui:include src="detalleCompra.xhtml" />
+	</ui:define>
+</ui:composition>
+</html>
