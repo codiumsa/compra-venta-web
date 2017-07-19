@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="frmComprar">
+	<p:dialog modal="true" header="Comprar" widgetVar="dialogoCompra"
+		closable="false" resizable="false">
+		<p:panel columns="1">
+			<p:outputLabel for="producto" value="Seleccionar Producto" />
+			<p:selectOneMenu id="producto" value="#{compraMB.productoSelected}"
+				immediate="true" required="true" converter="entityConverter">
+				<p:ajax event="change" update="@this" />
+				<f:selectItem itemValue="" itemLabel="--Seleccionar--"
+					noSelectionOption="true" />
+				<f:selectItems value="#{compraMB.productos}" var="producto"
+					itemValue="#{producto}" itemLabel="#{producto.nombre}" />
+			</p:selectOneMenu>
+			<p:outputLabel for="cantidad" value="Cantidad" />
+			<p:inputNumber autoResize="false" id="cantidad"
+				value="#{compraMB.cantidadProducto}" required="true">
+				<f:convertNumber integerOnly="true"/>
+			</p:inputNumber>
+		</p:panel>
+		<h:panelGrid columns="2" style="margin : auto">
+			<p:commandButton value="Comprar"
+				oncomplete="PF('dialogoCompra').hide()"
+				actionListener="#{compraMB.comprarProducto}" process="@this" />
+			<p:commandButton value="Cancelar"
+				oncomplete="PF('dialogoCompra').hide()" process="@this" />
+		</h:panelGrid>
+	</p:dialog>
+</h:form>
+</html>

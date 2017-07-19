@@ -13,9 +13,11 @@
 			&gt; Compras</div>
 		<br />
 		<h:form id="ftoolbarCompra">
-			<core:toolbarABM managedBean="#{compraMB}" botonVerDetalle="true" dialogoDetalle="detalleCompra"
+			<core:toolbarABM managedBean="#{compraMB}" botonVerDetalle="true" dialogoDetalle="detalleCompra" botonAgregar="false"
 			fdialogoDetalle=":frmGrillaCompraDetalle">
-
+					<p:commandButton value="Comprar" 
+						oncomplete="PF('dialogoCompra').show()" update=":frmComprar"
+						/>
 			</core:toolbarABM>
 		</h:form>
 		<br />
@@ -46,6 +48,7 @@
 
 		</h:form>		
 		<ui:include src="detalleCompra.xhtml" />
+		<ui:include src="comprarForm.xhtml" />
 	</ui:define>
 </ui:composition>
 </html>

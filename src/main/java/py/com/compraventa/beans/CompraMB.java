@@ -22,6 +22,8 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import py.com.compraventa.model.Compra;
 import py.com.compraventa.model.CompraDetalle;
+import py.com.compraventa.model.OrdenCompra;
+import py.com.compraventa.model.Producto;
 
 @ManagedBean
 @ViewScoped
@@ -52,18 +54,34 @@ public class CompraMB implements Serializable {
 	private boolean modificar = false;
 	private boolean modoSeleccionFila;	
 	
+	/*para realizar compra*/
+	Producto productoSelected = new Producto();
+	List<Producto> productos = new ArrayList<Producto>();
+	private int cantidadProducto = 0;
+	
 	@PostConstruct	
 	void postConstruct() {		
 		ClientResponse response = restClientCompra.clientGetResponse("/compras");
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());
         }
-        // get productos as JSON        
+        // get compras as JSON        
         String compras = response.getEntity(String.class);        
 		System.out.println(compras);
 		type = new TypeToken<List<Compra>>() {}.getType();
 		listaDataModel = gson.fromJson(compras, type);
-		System.out.println(listaDataModel.size());				 
+		System.out.println(listaDataModel.size());
+		//obtener listado de productos
+		ClientResponse responseProductos = restClientCompra.clientGetResponse("/productos");
+        if (responseProductos.getStatus() != 200) {
+            throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());
+        }
+        // get productos as JSON        
+        String productosCadena = responseProductos.getEntity(String.class);        
+		System.out.println(productosCadena);
+		type = new TypeToken<List<Producto>>() {}.getType();
+		productos = gson.fromJson(productosCadena, type);
+		System.out.println(productos.size());
 	}
 	
 	public String stringEstado() {
@@ -269,5 +287,49 @@ public class CompraMB implements Serializable {
 		this.listaDetalle = listaDetalle;
 	}	
 
+	public Producto getProductoSelected() {
+		return productoSelected;
+	}
 
+	public void setProductoSelected(Producto productoSelected) {
+		this.productoSelected = productoSelected;
+	}
+
+	public List<Producto> getProductos() {
+		return productos;
+	}
+
+	public void setProductos(List<Producto> productos) {
+		this.productos = productos;
+	}	
+
+	public int getCantidadProducto() {
+		return cantidadProducto;
+	}
+
+	public void setCantidadProducto(int cantidadProducto) {
+		this.cantidadProducto = cantidadProducto;
+	}
+
+	public void comprarProducto(){
+		System.out.println("comprarProducto");
+		System.out.println(productoSelected.getNombre());
+		List<OrdenCompra> ordenCompraList = new ArrayList<OrdenCompra>();
+		OrdenCompra oc = new OrdenCompra();
+		oc.setCantidad(cantidadProducto);
+		oc.setProducto(productoSelected);
+		ordenCompraList.add(oc);		
+		String ordenCompra = gson.toJson(ordenCompraList);
+		ClientResponse response = restClientCompra.clientPostResponse("/compras", ordenCompra);
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed service call: HTTP error code : " + response.getStatus());
+        }
+        // get compra as JSON        
+        String compra = response.getEntity(String.class);        
+		System.out.println(compra);
+		type = new TypeToken<List<Compra>>() {}.getType();
+		Compra c = gson.fromJson(compra, type);		
+		addMessageInfo("Creado exitosamente Compra: ".concat(c.getFecha()));		
+	}
+		
 }
